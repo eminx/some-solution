@@ -1,7 +1,7 @@
 {
-  "name": "Test Assignment Result",
+  "name": "solution-of-a-kind",
   "version": "0.1.0",
-  "description": "Assignment is made for Smart Bear",
+  "description": "This is made for a giant animal",
   "scripts": {
     "start": "node server.js",
     "lint": "eslint src"
