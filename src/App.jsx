@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
 
+import AppBar from 'material-ui/AppBar';
 import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
@@ -54,34 +55,22 @@ class App extends Component {
       </IconButton>
     );
 
-    function rightIconMenu(virt) {
-      return (
-        <IconMenu iconButtonElement={iconButtonElement}>
-          <MenuItem onTouchTap={() => appState.editVirt(virt)} >Edit</MenuItem>
-          <MenuItem >
-            <Toggle
-              label={virt.running ? 'Undeploy' : 'Deploy'}
-              toggled={virt.running}
-              onToggle={() => appState.toggleDeploy(virt)}
-            />
-          </MenuItem>
-        </IconMenu>
-      )
-    };
-
     return (
       <div style={{maxWidth: 720, margin: '0 auto'}}>
-        <h1>Virtualizations:</h1>
-        
+
+        <AppBar title="Virtualizations" />
+
         <List>
           {this.props.appState.virts.virtualizationList.map((virt => {
             return (
               <ListItem 
-                rightIconButton={rightIconMenu(virt)} 
                 key={virt.virtualizationID} 
-                style={{listStyle: 'none', cursor: 'pointer'}}
+                style={{listStyle: 'none'}}
               >  
-                <VirtCard card={virt} editCard={() => appState.editVirt(virt)} />
+                <VirtCard 
+                  card={virt} 
+                  editCard={() => appState.editVirt(virt)}
+                  toggleDeploy={() => appState.toggleDeploy(virt)} />
                 <Divider />
               </ListItem>
             )

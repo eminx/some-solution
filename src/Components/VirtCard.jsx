@@ -11,25 +11,57 @@ import {
 import Power from 'material-ui/svg-icons/action/power-settings-new';
 import Badge from 'material-ui/Badge';
 import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import Toggle from 'material-ui/Toggle';
 
-const VirtCard = ({card, editCard}) => (
-  <Card onTouchTap={() => editCard(card)} >
+
+const iconButtonElement = (
+  <IconButton
+    touch={true}
+    tooltip="Actions"
+    tooltipPosition="bottom-left"
+  >
+    <MoreVertIcon color={'#aaa'} />
+  </IconButton>
+);
+
+const VirtCard = ({card, editCard, toggleDeploy}) => (
+  <Card >
     <CardHeader
-      title={card.name}
-      subtitle={'apiType: ' + card.apiType}
+      style={{backgroundColor: '#eee', paddingLeft: '1em'}}
+      title={
+        <div onTouchTap={() => editCard(card)} style={{display: 'flex', alignItems: 'center', cursor: 'pointer'}}>
+          <Badge
+            badgeContent={
+              <IconButton 
+                tooltip={card.running ? 'Deployed' : 'Not Deployed'}
+                style={{width: 72, height: 72}}
+                iconStyle={{width: 48, height: 48, color: card.running ? 'green' : 'red'}}
+              >
+                <Power />
+              </IconButton>}
+          />
+          <h3 style={{marginLeft: '2em'}}>{card.name}</h3>
+        </div>
+      }
     >
-      <Badge
-        badgeContent={
-          <IconButton 
-            tooltip={card.running ? 'Deployed' : 'Not Deployed'}
-            iconStyle={{width: 48, height: 48, color: card.running ? 'green' : 'red', float: 'right'}}
-            style={{float: 'right'}}
-          >
+      <div style={{float: 'right'}}>
+        <IconMenu iconButtonElement={iconButtonElement}>
+          <MenuItem onTouchTap={() => editCard(card)} >Edit</MenuItem>
+          <MenuItem >
+            <Toggle
+              label={card.running ? 'Undeploy' : 'Deploy'}
+              toggled={card.running}
+              onToggle={() => toggleDeploy(card)}
+            />
+          </MenuItem>
+        </IconMenu>
+      </div>
 
-            <Power />
-          </IconButton>}
-      />
     </CardHeader>
+
     <CardText expandable={false}>
       <Table>
         <TableBody displayRowCheckbox={false}>
@@ -52,6 +84,7 @@ const VirtCard = ({card, editCard}) => (
         </TableBody>
       </Table>
     </CardText>
+
   </Card>
 );
 

@@ -2,6 +2,11 @@ import { observable } from 'mobx';
 import request from 'request-json';
 const client = request.createClient('http://localhost:8090/');
 
+const defaultSnack = {
+  isOpen: false,
+  message: 'Everything is fine!'
+}
+
 class AppState {
   @observable virts = {
   	virtualizationList: []
@@ -9,10 +14,7 @@ class AppState {
 
   @observable editableVirt = null;
 
-  @observable snack = {
-  	isOpen: false,
-  	message: 'Everything is fine!'
-  }
+  @observable snack = defaultSnack;
 
   editVirt(virt) {
 		this.editableVirt = virt;
@@ -29,8 +31,8 @@ class AppState {
   }
 
   reset() {
-  	this.editableVirt = null;
-  	this.getVirts();
+    this.getVirts();
+  	this.editVirt(null);
   }
 
   getVirts() {
@@ -38,13 +40,11 @@ class AppState {
   	client.get('sv/v1/virtualizations/', (err, res, body) => {
   		if (err) {
   			this.snack.isOpen = true;
-  			this.snack.message = "The operation couldn't be handled";
-  			console.log('error!', err);
+  			this.snack.message = 'The operation couldn\'t be handled';
   		} else {
   			self.virts = body;
-  			this.snack.isOpen = true;
-  			this.snack.message = 'Virtualizations are successfully received';
-  			console.log(res.statusCode);
+  			// this.snack.isOpen = true;
+  			// this.snack.message = 'Virtualizations are successfully received';
   		}
 		});
   }
@@ -54,17 +54,21 @@ class AppState {
   	const sendable = {
   		running: !isRunning
   	}
+    const snack = this.snack;
   	client.put('sv/v1/virtualizations/' + virt.virtualizationID, sendable, (err, res, body) => {
   		if (err) {
-  			this.snack.isOpen = true;
-  			this.snack.message = "The operation couldn't be handled";
-  			console.log('error!', err);
-  			// this is a hack for now, since I couldn't find out why the JSON parser problem happens
-  			this.getVirts();
+        console.log(err);
+        if (res.statusCode === 400) {
+          snack.isOpen = true;
+          snack.message = `The operation couldn\'t be handled because: ${err.toString()}. Please validate your inputs and try again`;
+        } else if (res.statusCode === 500) {
+          snack.isOpen = true;
+          snack.message = `The operation couldn\'t be handled because: ${err.toString()}. There seems to be a problem with the server. Please try again`;
+        }
   		} else {
-  			this.snack.isOpen = true;
-  			this.snack.message = `The virtualization is successfully ${isRunning ? 'undeployed' : 'undeployed'}`;
-  			this.getVirts();
+  			snack.isOpen = true;
+  			snack.message = `The virtualization is successfully ${isRunning ? 'undeployed' : 'deployed'}`;
+  			this.reset();
   		}
 		});
   }
@@ -82,15 +86,21 @@ class AppState {
   		}
   	}
 
+    const snack = this.snack;
   	client.put('sv/v1/virtualizations/' + vId, sendable, (err, res, body) => {
   		if (err) {
-  			this.snack.isOpen = true;
-  			this.snack.message = "The operation couldn't be handled";
-  			console.log('error!', err);
+  			console.log(err);
+        if (res.statusCode === 400) {
+          snack.isOpen = true;
+          snack.message = `The operation couldn\'t be handled because: ${err.toString()}. Please validate your inputs and try again`;
+        } else if (res.statusCode === 500) {
+          snack.isOpen = true;
+          snack.message = `The operation couldn\'t be handled because: ${err.toString()}. There seems to be a problem with the server. Please make sure the server is running or try again later.`;
+        }
   		} else {
-  			this.snack.isOpen = true;
-  			this.snack.message = 'The virtualization is successfully updated';
-  			console.log(res.statusCode);
+  			snack.isOpen = true;
+  			snack.message = 'The virtualization is successfully updated';
+        this.reset();
   		}
 		});
 
