@@ -4,11 +4,16 @@ import { AppContainer } from 'react-hot-loader';
 import AppState from './AppState';
 import App from './App';
 
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 const appState = new AppState();
 
 render(
   <AppContainer>
-    <App appState={appState} />
+    <MuiThemeProvider muiTheme={getMuiTheme()}>
+      <App appState={appState} />
+    </MuiThemeProvider>
   </AppContainer>,
   document.getElementById('root')
 );
@@ -19,7 +24,9 @@ if (module.hot) {
 
     render(
       <AppContainer>
-        <NextApp appState={appState} />
+        <MuiThemeProvider muiTheme={getMuiTheme()}>
+          <NextApp appState={appState} />
+        </MuiThemeProvider>
       </AppContainer>,
       document.getElementById('root')
     );

@@ -25,6 +25,22 @@ module.exports = {
       test: /\.jsx?$/,
       loaders: ['babel'],
       include: path.join(__dirname, 'src')
+    }, {
+      test: /\.json$/,
+      loaders: ['json-loader'],
+      use: 'json-loader'
     }]
+  },
+  node: {
+    net: "empty",
+    tls: "empty",
+    fs: "empty"
   }
+  /*,
+  rules: [
+    {
+      test: /\.json$/,
+      use: 'json-loader'
+    }
+  ]*/
 };
