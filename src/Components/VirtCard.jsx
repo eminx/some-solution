@@ -21,9 +21,9 @@ const iconButtonElement = (
   <IconButton
     touch={true}
     tooltip="Actions"
-    tooltipPosition="bottom-left"
+    tooltipPosition="bottom-center"
   >
-    <MoreVertIcon color={'#aaa'} />
+    <MoreVertIcon color={'#030303'} />
   </IconButton>
 );
 

@@ -35,12 +35,17 @@ class AppState {
   	this.editVirt(null);
   }
 
+  shutSnack() {
+    setTimeout(() => this.snack = defaultSnack, 4000);
+  }
+
   getVirts() {
   	const self = this;
   	client.get('sv/v1/virtualizations/', (err, res, body) => {
   		if (err) {
   			this.snack.isOpen = true;
   			this.snack.message = 'The operation couldn\'t be handled';
+        this.shutSnack();
   		} else {
   			self.virts = body;
   			// this.snack.isOpen = true;
@@ -61,13 +66,16 @@ class AppState {
         if (res.statusCode === 400) {
           snack.isOpen = true;
           snack.message = `The operation couldn\'t be handled because: ${err.toString()}. Please validate your inputs and try again`;
+          this.shutSnack();
         } else if (res.statusCode === 500) {
           snack.isOpen = true;
           snack.message = `The operation couldn\'t be handled because: ${err.toString()}. There seems to be a problem with the server. Please try again`;
+          this.shutSnack();
         }
   		} else {
   			snack.isOpen = true;
   			snack.message = `The virtualization is successfully ${isRunning ? 'undeployed' : 'deployed'}`;
+        this.shutSnack();
   			this.reset();
   		}
 		});
@@ -93,13 +101,16 @@ class AppState {
         if (res.statusCode === 400) {
           snack.isOpen = true;
           snack.message = `The operation couldn\'t be handled because: ${err.toString()}. Please validate your inputs and try again`;
+          this.shutSnack();
         } else if (res.statusCode === 500) {
           snack.isOpen = true;
           snack.message = `The operation couldn\'t be handled because: ${err.toString()}. There seems to be a problem with the server. Please make sure the server is running or try again later.`;
+          this.shutSnack();
         }
   		} else {
   			snack.isOpen = true;
   			snack.message = 'The virtualization is successfully updated';
+        this.shutSnack();
         this.reset();
   		}
 		});

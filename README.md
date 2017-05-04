@@ -10,9 +10,10 @@ First make sure to start the dummy api server:
 
 Then the client:
 
-1. `cd smart-solution`
-2. `npm i`
-3. `npm start`
+1. `cd ..`
+2. `cd smart-solution`
+3. `npm i`
+4. `npm start`
 
 Then go to: `localhost:3000` in your favourite browser.
 
@@ -25,7 +26,11 @@ Test scripts for ensuring that the api server and the home-made components are w
 
 ## Linting
 
-The code is lintable by running the command: `npm lint`.
+The code is lintable. First you have to globally install eslint:
+* `npm i -g eslint`
+
+Then run with:
+* `eslint src`
 
 
 ### Notes
