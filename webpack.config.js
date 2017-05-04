@@ -35,7 +35,12 @@ module.exports = {
     net: "empty",
     tls: "empty",
     fs: "empty"
-  }
+  },
+  alias: {
+    App: 'src/Components/App.jsx',
+    VirtCard: 'src/Components/VirtCard.jsx',
+    EditVirtDialog: 'src/Components/EditVirtDialog.jsx'
+  },
   /*,
   rules: [
     {
